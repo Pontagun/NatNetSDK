@@ -26,13 +26,23 @@ namespace SampleClientML
         public Quaternion IMUQuat0;
 
         static string filename = "";
+
+        static long initTime = 0;
         public void sensorRecoder(string comport)
         {
             filename = Program.filename;
             string port_number = comport;
             byte[] read_bytes0 = new byte[59];
 
-            int num_row = 0;
+            Queue<float> alphaBuffer = new Queue<float>();
+
+            int num_row = 1;
+            float alpha0 = 0;
+            initTime = DateTime.Now.Ticks / (TimeSpan.TicksPerMillisecond);
+
+
+            Console.WriteLine("PRESS ESC TO EXIT\n");
+            System.IO.File.AppendAllText(filename, $"Timestamp, gyro_x, gyro_y, gyro_z, acc_x, acc_y, acc_z, mag_qw, mag_qx, mag_qy, ss_qx, ss_qy, ss_qz, ss_qw, stillness\n");
 
             _serialPort = new SerialPort(port_number, 115200, Parity.None, 8, StopBits.One);
 
@@ -97,10 +107,15 @@ namespace SampleClientML
 
                 for (int i = 0; i < 59; i++) {
                     _serialPort.Read(read_bytes0, i, 1);
-                    if (read_bytes0[0] != 0 && read_bytes0[1] != 0 && read_bytes0[2] != 56) {
-                        failure_byte = true;
-                        break;
-                    }
+                    if (i == 2)
+                        if (read_bytes0[0] == 0 && read_bytes0[1] == 0 && read_bytes0[2] == 56)
+                        {
+                            failure_byte = false;
+                        }
+                        else {
+                            failure_byte = true;
+                            break;
+                        }
                 }
 
 
@@ -124,11 +139,35 @@ namespace SampleClientML
                 IMUQuat0.Z = WirelessMARGSensor.bytesToFloat(read_bytes0, 48 + 3);
                 IMUQuat0.W = WirelessMARGSensor.bytesToFloat(read_bytes0, 52 + 3);
 
-                if (num_row > 70)
-                    Console.WriteLine($"{IMUQuat0.X}, {IMUQuat0.Y}, {IMUQuat0.Z}, {IMUQuat0.W}");
+                long sampligTime = DateTime.Now.Ticks / (TimeSpan.TicksPerMillisecond);
+
+                //Console.WriteLine($"{sampligTime - initTime}, {IMUQuat0.X}, {IMUQuat0.Y}, {IMUQuat0.Z}, {IMUQuat0.W}");
+
+                if (num_row % 100 == 0) {
+                    Console.Write("#");
+                }
+
+                if (num_row % 1000 == 0)
+                {
+                    Console.WriteLine("\n");
+                }
+
+                if (alphaBuffer.Count < 3)
+                {
+                    alphaBuffer.Enqueue(Stillness0);
+                }
+                else {
+                    alphaBuffer.Dequeue();
+                    alphaBuffer.Enqueue(Stillness0);
+                }
+
+                alpha0 = alphaBuffer.Sum() / 3;
 
                 num_row++;
-                //System.IO.File.AppendAllText(filename, $"{IMUQuat0.X}, {IMUQuat0.Y}, {IMUQuat0.Z}, {IMUQuat0.W}\n");
+                System.IO.File.AppendAllText(filename, $"{sampligTime - initTime}, {Gyro0.X}, {Gyro0.Y}, {Gyro0.Z}, ");
+                System.IO.File.AppendAllText(filename, $"{Accelero0.X}, {Accelero0.Y}, {Accelero0.Z}, ");
+                System.IO.File.AppendAllText(filename, $"{Magneto0.X}, {Magneto0.Y}, {Magneto0.Z}, ");
+                System.IO.File.AppendAllText(filename, $"{IMUQuat0.X}, {IMUQuat0.Y}, {IMUQuat0.Z}, {IMUQuat0.W}, {alpha0}\n");
             }
 
             _serialPort.Write(stop_command, 0, stop_command.Length);

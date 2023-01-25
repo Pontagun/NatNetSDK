@@ -24,7 +24,7 @@ namespace SampleClientML
         private static string _wlss_comport = "COM8 ";
         public static void Main(string[] args) {
 
-            //Console.WriteLine("Log system starting...\n");
+            Console.WriteLine("Log system starting...\n");
             //System.IO.File.AppendAllText(filename, $"Timestamp, pos_x, pos_y, pos_z, cam_qx, cam_qy, cam_qz, cam_qw, ss_qx, ss_qy, ss_qz, ss_qw, ");
             //System.IO.File.AppendAllText(filename, $"gyro_x, gyro_y, gyro_z, acc_x, acc_y, acc_z, mag_qw, mag_qx, mag_qy, stillness\n");
 

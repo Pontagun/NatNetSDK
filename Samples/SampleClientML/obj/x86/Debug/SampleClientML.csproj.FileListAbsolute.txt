@@ -5,3 +5,10 @@ C:\Users\psonc001\Work\Store\NatNetSDK\Samples\SampleClientML\obj\x86\Debug\Samp
 C:\Users\psonc001\Work\Store\NatNetSDK\Samples\SampleClientML\obj\x86\Debug\SampleClientML.exe
 C:\Users\psonc001\Work\Store\NatNetSDK\Samples\SampleClientML\obj\x86\Debug\SampleClientML.pdb
 C:\Users\psonc001\Work\Store\NatNetSDK\Samples\SampleClientML\obj\x86\Debug\SampleClientML.csproj.AssemblyReference.cache
+C:\Users\psonc001\source\repos\NatNetSDK\Samples\bin\x86\SampleClientML.exe.config
+C:\Users\psonc001\source\repos\NatNetSDK\Samples\bin\x86\SampleClientML.exe
+C:\Users\psonc001\source\repos\NatNetSDK\Samples\bin\x86\SampleClientML.pdb
+C:\Users\psonc001\source\repos\NatNetSDK\Samples\SampleClientML\obj\x86\Debug\SampleClientML.csproj.CoreCompileInputs.cache
+C:\Users\psonc001\source\repos\NatNetSDK\Samples\SampleClientML\obj\x86\Debug\SampleClientML.exe
+C:\Users\psonc001\source\repos\NatNetSDK\Samples\SampleClientML\obj\x86\Debug\SampleClientML.pdb
+C:\Users\psonc001\source\repos\NatNetSDK\Samples\SampleClientML\obj\x86\Debug\SampleClientML.csproj.AssemblyReference.cache

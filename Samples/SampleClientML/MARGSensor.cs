@@ -8,7 +8,7 @@ namespace SampleClientML
 {
     class WirelessMARGSensor {
 
-        public static byte[] interval = BitConverter.GetBytes(10000);
+        public static byte[] interval = BitConverter.GetBytes(70000);
         public static byte[] delay = BitConverter.GetBytes(0);
         public static byte[] duration = BitConverter.GetBytes(0xFFFFFFFF);
 

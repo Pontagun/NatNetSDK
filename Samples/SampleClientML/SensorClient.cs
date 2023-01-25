@@ -42,6 +42,8 @@ namespace SampleClientML
             _serialPort.ReadTimeout = 500;
             _serialPort.WriteTimeout = 500;
 
+
+
             try
             {
                 _serialPort.Open();
