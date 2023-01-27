@@ -107,4 +107,27 @@ namespace SampleClientML
             return BitConverter.ToSingle(big_bytes, 0);
         }
     }
+
+    public class SensorHelper {
+        public static float computeAlpha(Queue<float> q, float prevAlpha) {
+
+            float[] stillnessBuffer = q.ToArray();
+            float w_g = 0.25f;
+            int m_a = 1;
+            float alpha_prime = 0.0f;
+            float alpha_g = 0.0f;
+            float alpha = 1.0f;
+
+            if (q.Count > 2) {
+                alpha_g = w_g * (float)(Math.Pow(stillnessBuffer[1], 2));
+                alpha_g += (1 - w_g) * prevAlpha;
+                alpha_prime = (m_a * alpha_g);
+
+                alpha = (alpha_prime + Math.Abs(alpha_prime)) / 2;
+            }
+
+            return alpha;
+        }
+    
+    }
 }

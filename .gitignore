@@ -10,3 +10,7 @@ Samples/.vs/NatNetSamples/v16/Solution.VC.db
 Samples/.vs/NatNetSamples/v16/Solution.VC.db-shm
 Samples/.vs/NatNetSamples/v16/Solution.VC.db-wal
 Samples/bin/
+*.exe
+*.pdb
+*.exe
+*.pdb
