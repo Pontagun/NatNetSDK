@@ -20,6 +20,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using NatNetML;
+using System.Windows;
 
 /* SampleClientML.cs
  * 
@@ -71,7 +72,7 @@ namespace SampleClientML
 
         //private static SensorClient sonsor_client = new SensorClient();
 
-        private static SensorClient sensor_client = Program.sensor_client;
+        private static WirelessSensorClient sensor_client = Program.wlss_sensor_client;
         static string filename = "";
         static long initTime = 0; // DateTime.Now.Ticks / (TimeSpan.TicksPerMillisecond / 10); // Dividing by 10 to get 1 more precision, a digit follows millisecond.
 
@@ -276,29 +277,39 @@ namespace SampleClientML
                         //    Console.WriteLine("\t\tori ({0:N3}, {1:N3}, {2:N3})", xrot, yrot, zrot);
                         //}
                         #endregion
-                        if (rbData.Tracked == true)
+                        //if (rbData.Tracked == true)
+                        //if (true) // Tempor
+                        //{
+                        float[] quat = new float[4] { rbData.qx, rbData.qy, rbData.qz, rbData.qw };
+                        try
                         {
-                            // Rigid Body Euler Orientation
-                            float[] quat = new float[4] { rbData.qx, rbData.qy, rbData.qz, rbData.qw };
-                            try
+                            // The code to correct a reverse plot, eventhrough it is essentailly same in 2pi rotation.
+                            if (rbData.qy < 0)
                             {
-                                System.IO.File.AppendAllText(filename, $"{sampligTime - initTime}, {rbData.x}, {rbData.y}, {rbData.z}, ");
-                                System.IO.File.AppendAllText(filename, $"{-1 * rbData.qz}, {rbData.qw}, {-1 * rbData.qx}, {rbData.qy}, "); // print in XYZW order, but in left hand coordinate.
-                                //System.IO.File.AppendAllText(filename, $"{rbData.qz}, {-1 * rbData.qw}, {rbData.qx}, {-1 * rbData.qy}, ");
-                                System.IO.File.AppendAllText(filename, $"{sensor_client.IMUQuat0.X}, {sensor_client.IMUQuat0.Y}, {sensor_client.IMUQuat0.Z}, {sensor_client.IMUQuat0.W}, ");
-                                System.IO.File.AppendAllText(filename, $"{sensor_client.Gyro0.X}, {sensor_client.Gyro0.Y}, {sensor_client.Gyro0.Z}, ");
-                                System.IO.File.AppendAllText(filename, $"{sensor_client.Accelero0.X}, {sensor_client.Accelero0.Y}, {sensor_client.Accelero0.Z}, ");
-                                System.IO.File.AppendAllText(filename, $"{sensor_client.Magneto0.X}, {sensor_client.Magneto0.Y}, {sensor_client.Magneto0.Z}, {sensor_client.Stillness0}\n");
+                                rbData.qx *= -1;
+                                rbData.qy *= -1;
+                                rbData.qz *= -1;
+                                rbData.qw *= -1;
                             }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(e);
-                            }
+
+                            System.IO.File.AppendAllText(filename, $"{sampligTime - initTime}, {rbData.x}, {rbData.y}, {rbData.z}, ");
+
+                            System.IO.File.AppendAllText(filename, $"{-1 * rbData.qz}, {rbData.qw}, {-1 * rbData.qx}, {rbData.qy}, ");
+                            //System.IO.File.AppendAllText(filename, $"{rbData.qz}, {-1 * rbData.qw}, {rbData.qx}, {-1 * rbData.qy}, ");
+                            System.IO.File.AppendAllText(filename, $"{sensor_client.IMUQuat0.X}, {sensor_client.IMUQuat0.Y}, {sensor_client.IMUQuat0.Z}, {sensor_client.IMUQuat0.W}, ");
+                            System.IO.File.AppendAllText(filename, $"{sensor_client.Gyro0.X}, {sensor_client.Gyro0.Y}, {sensor_client.Gyro0.Z}, ");
+                            System.IO.File.AppendAllText(filename, $"{sensor_client.Accelero0.X}, {sensor_client.Accelero0.Y}, {sensor_client.Accelero0.Z}, ");
+                            System.IO.File.AppendAllText(filename, $"{sensor_client.Magneto0.X}, {sensor_client.Magneto0.Y}, {sensor_client.Magneto0.Z}, {sensor_client.Stillness0}, {((rbData.Tracked == true) ? 1 : 0)}\n");
                         }
-                        else
+                        catch (Exception e)
                         {
-                            Console.WriteLine("\t{0} is not tracked in current frame", rb.Name);
+                            Console.WriteLine(e);
                         }
+                        //}
+                        //else
+                        //{
+                        //    Console.WriteLine("\t{0} is not tracked in current frame", rb.Name);
+                        //}
                     }
                 }
             }

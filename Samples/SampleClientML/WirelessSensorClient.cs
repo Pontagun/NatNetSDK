@@ -43,7 +43,7 @@ namespace SampleClientML
 
 
             Console.WriteLine("PRESS ESC TO EXIT\n");
-            System.IO.File.AppendAllText(filename, $"Timestamp, stillness, gyro_x, gyro_y, gyro_z, acc_x, acc_y, acc_z, mag_x, mag_y, mag_z, alpha, ss_qx, ss_qy, ss_qz, ss_qw\n");
+            //System.IO.File.AppendAllText(filename, $"Timestamp, stillness, gyro_x, gyro_y, gyro_z, acc_x, acc_y, acc_z, mag_x, mag_y, mag_z, alpha, ss_qx, ss_qy, ss_qz, ss_qw\n");
 
             _serialPort = new SerialPort(port_number, 115200, Parity.None, 8, StopBits.One);
 
@@ -172,10 +172,10 @@ namespace SampleClientML
 
 
                 num_row++;
-                System.IO.File.AppendAllText(filename, $"{sampligTime - initTime}, {Stillness0}, {Gyro0.X}, {Gyro0.Y}, {Gyro0.Z}, ");
-                System.IO.File.AppendAllText(filename, $"{Accelero0.X}, {Accelero0.Y}, {Accelero0.Z}, ");
-                System.IO.File.AppendAllText(filename, $"{Magneto0.X}, {Magneto0.Y}, {Magneto0.Z}, {alpha0}, ");
-                System.IO.File.AppendAllText(filename, $"{IMUQuat0.X}, {IMUQuat0.Y}, {IMUQuat0.Z}, {IMUQuat0.W}\n");
+                //System.IO.File.AppendAllText(filename, $"{sampligTime - initTime}, {Stillness0}, {Gyro0.X}, {Gyro0.Y}, {Gyro0.Z}, ");
+                //System.IO.File.AppendAllText(filename, $"{Accelero0.X}, {Accelero0.Y}, {Accelero0.Z}, ");
+                //System.IO.File.AppendAllText(filename, $"{Magneto0.X}, {Magneto0.Y}, {Magneto0.Z}, {alpha0}, ");
+                //System.IO.File.AppendAllText(filename, $"{IMUQuat0.X}, {IMUQuat0.Y}, {IMUQuat0.Z}, {IMUQuat0.W}\n");
             }
 
             _serialPort.Write(stop_command, 0, stop_command.Length);
