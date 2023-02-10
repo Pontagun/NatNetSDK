@@ -23,7 +23,7 @@ namespace SampleClientML
         public Boolean failure_byte = false;
         public float Stillness0;
         public Vector3 Gyro0, Accelero0, Magneto0;
-        public Quaternion IMUQuat0;
+        public Quaternion IMUQuat0 = new Quaternion(0, 0, 0, 1);
 
         static string filename = "";
 
@@ -42,7 +42,7 @@ namespace SampleClientML
             initTime = DateTime.Now.Ticks / (TimeSpan.TicksPerMillisecond);
 
 
-            Console.WriteLine("PRESS ESC TO EXIT\n");
+            Console.WriteLine("PRESS ESC TWICE TO EXIT\n");
             //System.IO.File.AppendAllText(filename, $"Timestamp, stillness, gyro_x, gyro_y, gyro_z, acc_x, acc_y, acc_z, mag_x, mag_y, mag_z, alpha, ss_qx, ss_qy, ss_qz, ss_qw\n");
 
             _serialPort = new SerialPort(port_number, 115200, Parity.None, 8, StopBits.One);
