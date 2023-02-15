@@ -20,26 +20,29 @@ namespace SampleClientML
         public static WirelessSensorClient wlss_sensor_client = new WirelessSensorClient();
         public static CameraClientML camera_client = new CameraClientML();
         public static string filename = $"rigidbody_orientation_{Regex.Replace(DateTime.Now.ToString(), @"[^\w\.@-]", "")}.csv";
-        private static string _comport = "COM6";
+        private static string _comport = "COM4";
         private static string _wlss_comport = "COM10";
         public static void Main(string[] args) {
 
             Console.WriteLine("Log system starting...\n");
-            System.IO.File.AppendAllText(filename, $"Timestamp, pos_x, pos_y, pos_z, cam_qx, cam_qy, cam_qz, cam_qw, ss_qx, ss_qy, ss_qz, ss_qw, ");
-            System.IO.File.AppendAllText(filename, $"gyro_x, gyro_y, gyro_z, acc_x, acc_y, acc_z, mag_qw, mag_qx, mag_qy, stillness, isTracked\n");
-
-            //Console.WriteLine("Sensor recorder starting...\n");
-            //Thread sensor_thread = new Thread(() => sensor_client.sensorRecoder(_comport));
-            //sensor_thread.Start();
-
             Console.WriteLine(Regex.Replace(DateTime.Now.ToString(), @"[^\w\.@-]", ""));
+
+            System.IO.File.AppendAllText(filename, $"Timestamp, pos_x, pos_y, pos_z, cam_qx, cam_qy, cam_qz, cam_qw, ss_qx, ss_qy, ss_qz, ss_qw, ");
+            System.IO.File.AppendAllText(filename, $"gyro_x, gyro_y, gyro_z, acc_x, acc_y, acc_z, mag_x, mag_y, mag_z, stillness, isTracked\n");
+
+            Console.WriteLine("Sensor recorder starting...\n");
+            Thread sensor_thread = new Thread(() => sensor_client.sensorRecoder(_comport));
+            sensor_thread.Start();
+
+            Thread.Sleep(1000);
+            //Console.WriteLine("Sensor recorder starting...\n");
+            //Thread wlss_sensor_thread = new Thread(() => wlss_sensor_client.sensorRecoder(_wlss_comport));
+            //wlss_sensor_thread.Start();
+
             Console.WriteLine("Camera recorder starting...\n");
             Thread camera_thread = new Thread(camera_client.cameraRecoder);
             camera_thread.Start();
 
-            Console.WriteLine("Sensor recorder starting...\n");
-            Thread wlss_sensor_thread = new Thread(() => wlss_sensor_client.sensorRecoder(_wlss_comport));
-            wlss_sensor_thread.Start();
         }
     }
 }

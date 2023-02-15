@@ -25,6 +25,7 @@ namespace SampleClientML
         public static byte[] interval = BitConverter.GetBytes(10000);
         public static byte[] delay = BitConverter.GetBytes(0);
         public static byte[] duration = BitConverter.GetBytes(0xFFFFFFFF);
+        public static byte[] stop_command = { 0xF8, 0x00, 0x56, 0x56 };
         public float Stillness0;
         public Vector3 Gyro0, Accelero0, Magneto0;
         public Quaternion IMUQuat0 = new Quaternion(0, 0, 0, 1);
@@ -35,14 +36,11 @@ namespace SampleClientML
             filename = Program.filename;
             string port_number = comport;
             byte[] read_bytes0 = new byte[56];
-            int read_counter = 100;
-            int byte_idx0 = 0;
+
             _serialPort = new SerialPort(port_number, 115200, Parity.None, 8, StopBits.One);
 
             _serialPort.ReadTimeout = 500;
             _serialPort.WriteTimeout = 500;
-
-
 
             try
             {
@@ -55,6 +53,7 @@ namespace SampleClientML
 
             _serialPort.Write(WiredMARGSensor.stream_slots_bytes, 0, WiredMARGSensor.stream_slots_bytes.Length);
 
+            // The data must be flipped to big endian before sending to sensor
             Array.Reverse(interval);    // byte[]
             Array.Reverse(delay);       // byte[]
             Array.Reverse(duration);    // byte[]
@@ -65,9 +64,13 @@ namespace SampleClientML
             delay.CopyTo(stream_timing_bytes, 6);
             duration.CopyTo(stream_timing_bytes, 10);
 
-            stream_timing_bytes[14] = (byte)((stream_timing_bytes[1] + stream_timing_bytes[2] + stream_timing_bytes[3] + stream_timing_bytes[4] + stream_timing_bytes[5] + stream_timing_bytes[6] +
-                                        stream_timing_bytes[7] + stream_timing_bytes[8] + stream_timing_bytes[9] + stream_timing_bytes[10] + stream_timing_bytes[11] + stream_timing_bytes[12] + 
-                                        stream_timing_bytes[13]) % 256);
+            stream_timing_bytes[14] = (byte)((stream_timing_bytes[1] + stream_timing_bytes[2]
+                + stream_timing_bytes[3] + stream_timing_bytes[4] 
+                + stream_timing_bytes[5] + stream_timing_bytes[6] 
+                + stream_timing_bytes[7] + stream_timing_bytes[8] 
+                + stream_timing_bytes[9] + stream_timing_bytes[10] 
+                + stream_timing_bytes[11] + stream_timing_bytes[12] 
+                + stream_timing_bytes[13]) % 256);
 
             _serialPort.Write(stream_timing_bytes, 0, stream_timing_bytes.Length);
             
@@ -79,34 +82,15 @@ namespace SampleClientML
 
             _serialPort.Write(start_stream_bytes, 0, start_stream_bytes.Length);
 
-            while (true)
+            while (!(Console.KeyAvailable && Console.ReadKey().Key == ConsoleKey.Escape))
             {
-                read_bytes0 = new byte[56];
-                read_counter = 100;
-                byte_idx0 = 0;
+                //TODO: Need to be initialised by other values except 0
+                read_bytes0 = Enumerable.Repeat((byte)1, 59).ToArray();
 
-                while (read_counter > 0)
+                //Sensor returns accumulative 56 bytes as a result of each command.
+                for (int i = 0; i < 56; i++)
                 {
-                    try
-                    {
-                        byte_idx0 += _serialPort.Read(read_bytes0, byte_idx0, 1);
-                    }
-                    catch (IOException e)
-                    {
-                        Console.WriteLine("Error reading from the sensor");
-                        // Failed to read from serial port
-                    }
-                    if (byte_idx0 == 56)
-                    { // <----------------- No. of Bytes
-                        //Console.WriteLine("Break case");
-                        break;
-                    }
-                    if (read_counter <= 0)
-                    {
-                        throw new System.Exception("Failed to read quaternion from port too many times." +
-                            " This could mean the port is not open or the Mono serial read is not responding.");
-                    }
-                    read_counter--;
+                    _serialPort.Read(read_bytes0, i, 1); 
                 }
 
                 Stillness0 = WiredMARGSensor.bytesToFloat(read_bytes0, 0);
@@ -123,12 +107,10 @@ namespace SampleClientML
                 IMUQuat0.Y = WiredMARGSensor.bytesToFloat(read_bytes0, 44);
                 IMUQuat0.Z = WiredMARGSensor.bytesToFloat(read_bytes0, 48);
                 IMUQuat0.W = WiredMARGSensor.bytesToFloat(read_bytes0, 52);
-
-                Console.WriteLine($"{IMUQuat0.X}, {IMUQuat0.Y}, {IMUQuat0.Z}, {IMUQuat0.W}");
-
-                //long seconds = DateTime.Now.Ticks / 100; 
-                //System.IO.File.AppendAllText(filename, $"{seconds}, {IMUQuat0.X}, {IMUQuat0.Y}, {IMUQuat0.Z}, {IMUQuat0.W}\n");
             }
+
+            _serialPort.Write(stop_command, 0, stop_command.Length);
+            Console.WriteLine("Serial port is closed.");
         }
     }
 }

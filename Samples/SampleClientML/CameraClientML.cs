@@ -56,6 +56,8 @@ namespace SampleClientML
         private static NatNetML.ConnectionType mConnectionType = ConnectionType.Multicast; // Multicast or Unicast mode
 
 
+        private static int num_row = 1;
+
         /*  List for saving each of datadescriptors */
         private static List<NatNetML.DataDescriptor> mDataDescriptor = new List<NatNetML.DataDescriptor>();
 
@@ -72,7 +74,8 @@ namespace SampleClientML
 
         //private static SensorClient sonsor_client = new SensorClient();
 
-        private static WirelessSensorClient sensor_client = Program.wlss_sensor_client;
+        //private static WirelessSensorClient sensor_client = Program.wlss_sensor_client;
+        private static SensorClient sensor_client = Program.sensor_client;
         static string filename = "";
         static long initTime = 0; // DateTime.Now.Ticks / (TimeSpan.TicksPerMillisecond / 10); // Dividing by 10 to get 1 more precision, a digit follows millisecond.
 
@@ -150,7 +153,7 @@ namespace SampleClientML
 
                 Console.WriteLine("Success: Data Port Connected \n");
 
-                Console.WriteLine("======================== STREAMING IN (PRESS CRTL+Z THEN CTRL+C TO EXIT) =====================\n");
+                Console.WriteLine("======================== STREAMING IN (PRESS ESC TWICE TO EXIT) =====================\n");
             }
 
 
@@ -300,7 +303,19 @@ namespace SampleClientML
                             System.IO.File.AppendAllText(filename, $"{sensor_client.Gyro0.X}, {sensor_client.Gyro0.Y}, {sensor_client.Gyro0.Z}, ");
                             System.IO.File.AppendAllText(filename, $"{sensor_client.Accelero0.X}, {sensor_client.Accelero0.Y}, {sensor_client.Accelero0.Z}, ");
                             System.IO.File.AppendAllText(filename, $"{sensor_client.Magneto0.X}, {sensor_client.Magneto0.Y}, {sensor_client.Magneto0.Z}, {sensor_client.Stillness0}, {((rbData.Tracked == true) ? 1 : 0)}\n");
+
+                            num_row++;
+                            if (num_row % 100 == 0)
+                            {
+                                Console.Write("#");
+                            }
+
+                            if (num_row % 1000 == 0)
+                            {
+                                Console.WriteLine("\n");
+                            }
                         }
+
                         catch (Exception e)
                         {
                             Console.WriteLine(e);
