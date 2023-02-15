@@ -144,15 +144,6 @@ namespace SampleClientML
 
                 //Console.WriteLine($"{sampligTime - initTime}, {IMUQuat0.X}, {IMUQuat0.Y}, {IMUQuat0.Z}, {IMUQuat0.W}");
 
-                if (num_row % 100 == 0) {
-                    Console.Write("#");
-                }
-
-                if (num_row % 1000 == 0)
-                {
-                    Console.WriteLine("\n");
-                }
-
                 if (alphaBuffer.Count < 3)
                 {
                     alphaBuffer.Enqueue(Stillness0);
