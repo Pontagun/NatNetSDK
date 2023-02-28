@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\psonc001\Work\Store\NatNetSDK\Samples\bin\x86\PacketClient.exe</FullPath>
+      <FullPath>C:\Users\psonc001\source\repos\NatNetSDK\Samples\bin\x86\PacketClient.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

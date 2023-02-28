@@ -16,3 +16,6 @@ Samples/bin/
 *.pdb
 *.exe
 *.csproj
+*.log
+*.recipe
+*.cache

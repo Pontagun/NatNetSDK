@@ -74,8 +74,8 @@ namespace SampleClientML
 
         //private static SensorClient sonsor_client = new SensorClient();
 
-        //private static WirelessSensorClient sensor_client = Program.wlss_sensor_client;
-        private static SensorClient sensor_client = Program.sensor_client;
+        private static WirelessSensorClient sensor_client = Program.wlss_sensor_client;
+        //private static SensorClient sensor_client = Program.sensor_client;
         static string filename = "";
         static long initTime = 0; // DateTime.Now.Ticks / (TimeSpan.TicksPerMillisecond / 10); // Dividing by 10 to get 1 more precision, a digit follows millisecond.
 

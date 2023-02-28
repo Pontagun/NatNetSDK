@@ -109,7 +109,7 @@ namespace SampleClientML
                 for (int i = 0; i < 59; i++) {
                     _serialPort.Read(read_bytes0, i, 1);
                     if (i == 2)
-                        if (read_bytes0[0] == 0 && read_bytes0[1] == 0 && read_bytes0[2] == 56)
+                        if (read_bytes0[0] == 0 & read_bytes0[1] == 0 & read_bytes0[2] == 56)
                         {
                             failure_byte = false;
                         }
